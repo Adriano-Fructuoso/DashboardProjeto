@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Material</title>
+</head>
+<body>
+    <h1>Editar Material</h1>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.nome.label }}<br>
+            {{ form.nome(size=20) }}<br>
+            {{ form.errors.nome }}
+        </p>
+        <p>
+            {{ form.valor.label }}<br>
+            {{ form.valor(size=20) }}<br>
+            {{ form.errors.valor }}
+        </p>
+        <p>
+            {{ form.quantidade.label }}<br>
+            {{ form.quantidade(size=20) }}<br>
+            {{ form.errors.quantidade }}
+        </p>
+        <p>
+            {{ form.tipo.label }}<br>
+            {{ form.tipo() }}<br>
+            {{ form.errors.tipo }}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+    <a href="{{ url_for('materiais') }}">Voltar para Materiais</a>
+</body>
+</html>

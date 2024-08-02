@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Atendimentos</title>
+    <style>
+        .procedure-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .procedure-item {
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 5px;
+        }
+
+        .procedure-actions {
+            display: inline-block;
+            margin-left: 10px;
+        }
+    </style>
+    <script>
+        let procedureCount = 1;
+
+        function addProcedure() {
+            procedureCount++;
+            const procedureDiv = document.createElement('div');
+            procedureDiv.setAttribute('id', `procedure${procedureCount}`);
+            procedureDiv.innerHTML = `
+                <p>
+                    <label for="procedimento${procedureCount}">Procedimento ${procedureCount}</label><br>
+                    <select name="procedimento${procedureCount}" id="procedimento${procedureCount}">
+                        {% for proc in form.procedimento1.choices %}
+                            <option value="{{ proc[0] }}">{{ proc[1] }}</option>
+                        {% endfor %}
+                    </select>
+                </p>
+            `;
+            document.getElementById('procedures').appendChild(procedureDiv);
+            document.getElementById('procedureCount').value = procedureCount;
+        }
+
+        function removeProcedure() {
+            if (procedureCount > 1) {
+                const procedureDiv = document.getElementById(`procedure${procedureCount}`);
+                document.getElementById('procedures').removeChild(procedureDiv);
+                procedureCount--;
+                document.getElementById('procedureCount').value = procedureCount;
+            }
+        }
+
+        function formatDate(input) {
+            const value = input.value.replace(/\D/g, '');
+            let formatted = '';
+
+            if (value.length > 0) {
+                formatted += value.substring(0, 2);
+            }
+            if (value.length > 2) {
+                formatted += '/' + value.substring(2, 4);
+            }
+            if (value.length > 4) {
+                formatted += '/' + value.substring(4, 8);
+            }
+
+            input.value = formatted;
+        }
+    </script>
+</head>
+<body>
+    <h1>Atendimentos</h1>
+    <a href="{{ url_for('index') }}">Home</a>
+    <a href="{{ url_for('configurar_procedimentos') }}">Configurar Procedimentos</a>
+    <a href="{{ url_for('materiais') }}">Materiais</a>
+
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.data_atendimento.label }}<br>
+            {{ form.data_atendimento(size=20, placeholder='dd/mm/aaaa', oninput='formatDate(this)') }}<br>
+            {{ form.errors.data_atendimento }}
+        </p>
+        <p>
+            {{ form.nome_paciente.label }}<br>
+            {{ form.nome_paciente(size=20) }}<br>
+            {{ form.errors.nome_paciente }}
+        </p>
+        <div id="procedures">
+            <p>
+                {{ form.procedimento1.label }}<br>
+                {{ form.procedimento1() }}<br>
+                {{ form.errors.procedimento1 }}
+            </p>
+        </div>
+        <input type="hidden" name="procedureCount" id="procedureCount" value="1">
+        <button type="button" onclick="addProcedure()">Adicionar</button>
+        <button type="button" onclick="removeProcedure()">Remover</button>
+        <p>
+            {{ form.materiais.label }}<br>
+            {{ form.materiais(size=20) }}<br>
+            {{ form.errors.materiais }}
+        </p>
+        <p>
+            {{ form.observacoes.label }}<br>
+            {{ form.observacoes(cols=30, rows=5) }}<br>
+            {{ form.errors.observacoes }}
+        </p>
+        <p>{{ form.submit() }}</p>
+        <a href="{{ url_for('configurar_procedimentos') }}">
+            <button type="button">Configurar Procedimentos</button>
+        </a>
+    </form>
+
+    <h2>Lista de Atendimentos</h2>
+    <ul class="procedure-list">
+        {% for atendimento in atendimentos %}
+        <li class="procedure-item">
+            {{ atendimento.data_atendimento }} - {{ atendimento.nome_paciente }} - R$ {{ atendimento.valor_total | round(2) }}
+            <div class="procedure-actions">
+                <form action="{{ url_for('edit_atendimento', id=atendimento.id) }}" method="GET" style="display:inline;">
+                    <button type="submit">Editar</button>
+                </form>
+                <form action="{{ url_for('delete_atendimento', id=atendimento.id) }}" method="POST" style="display:inline;">
+                    <button type="submit">Remover</button>
+                </form>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

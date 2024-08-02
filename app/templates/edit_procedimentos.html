@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Procedimento</title>
+</head>
+<body>
+    <h1>Editar Procedimento</h1>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.nome.label }}<br>
+            {{ form.nome(size=20) }}<br>
+            {{ form.errors.nome }}
+        </p>
+        <p>
+            {{ form.valor.label }}<br>
+            {{ form.valor(size=20) }}<br>
+            {{ form.errors.valor }}
+        </p>
+        <p>
+            {{ form.materiais.label }}<br>
+            {{ form.materiais(size=20) }}<br>
+            {{ form.errors.materiais }}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+</body>
+</html>
