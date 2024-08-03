@@ -1,6 +1,6 @@
 ﻿from flask_wtf import FlaskForm
-from wtforms import StringField, FloatField, SelectField, TextAreaField, SubmitField, IntegerField  # Adicionada a importação de IntegerField
-from wtforms.validators import DataRequired
+from wtforms import StringField, FloatField, SelectField, TextAreaField, SubmitField, IntegerField, DateField
+from wtforms.validators import DataRequired, NumberRange
 from .models import Procedimento
 
 class AtendimentoForm(FlaskForm):
@@ -21,9 +21,15 @@ class ProcedimentoForm(FlaskForm):
     materiais = StringField('Materiais Utilizados', validators=[DataRequired()])
     submit = SubmitField('Salvar')
 
-class MaterialForm(FlaskForm):
+class EstoqueForm(FlaskForm):
     nome = StringField('Nome do Material', validators=[DataRequired()])
-    valor = FloatField('Valor de Compra', validators=[DataRequired()])
-    quantidade = IntegerField('Quantidade', validators=[DataRequired()])  # Campo de quantidade adicionado
-    tipo = SelectField('Tipo', choices=[('Tipo1', 'Tipo 1'), ('Tipo2', 'Tipo 2')], validators=[DataRequired()])  # Campo de tipo adicionado
+    categoria = StringField('Categoria', validators=[DataRequired()])
+    quantidade = IntegerField('Quantidade', validators=[DataRequired(), NumberRange(min=0)])
+    unidade_medida = StringField('Unidade de Medida', validators=[DataRequired()])
+    data_compra = StringField('Data da Compra', validators=[DataRequired()])
+    valor_unitario = FloatField('Valor Unitário', validators=[DataRequired()])
+    fornecedor = StringField('Fornecedor', validators=[DataRequired()])
+    data_validade = StringField('Data de Validade', validators=[DataRequired()])
+    observacoes = TextAreaField('Observações')
     submit = SubmitField('Salvar')
+

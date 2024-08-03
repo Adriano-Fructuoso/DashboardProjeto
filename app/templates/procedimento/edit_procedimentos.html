@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Editar Material</title>
+    <title>Editar Procedimento</title>
 </head>
 <body>
-    <h1>Editar Material</h1>
+    <h1>Editar Procedimento</h1>
     <form method="POST">
         {{ form.hidden_tag() }}
         <p>
@@ -19,17 +19,12 @@
             {{ form.errors.valor }}
         </p>
         <p>
-            {{ form.quantidade.label }}<br>
-            {{ form.quantidade(size=20) }}<br>
-            {{ form.errors.quantidade }}
-        </p>
-        <p>
-            {{ form.tipo.label }}<br>
-            {{ form.tipo() }}<br>
-            {{ form.errors.tipo }}
+            {{ form.materiais.label }}<br>
+            {{ form.materiais(size=20) }}<br>
+            {{ form.errors.materiais }}
         </p>
         <p>{{ form.submit() }}</p>
     </form>
-    <a href="{{ url_for('materiais') }}">Voltar para Materiais</a>
+    <a href="{{ url_for('configurar_procedimentos') }}">Voltar para Configurar Procedimentos</a>
 </body>
 </html>

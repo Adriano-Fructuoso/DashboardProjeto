@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Estoque</title>
+    <style>
+        .material-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .material-item {
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 5px;
+        }
+
+        .material-actions {
+            display: inline-block;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Estoque</h1>
+    <a href="{{ url_for('index') }}">Home</a>
+    <a href="{{ url_for('atendimentos') }}">Atendimentos</a>
+    <a href="{{ url_for('configurar_procedimentos') }}">Configurar Procedimentos</a>
+
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.nome.label }}<br>
+            {{ form.nome(size=20) }}<br>
+            {{ form.errors.nome }}
+        </p>
+        <p>
+            {{ form.categoria.label }}<br>
+            {{ form.categoria(size=20) }}<br>
+            {{ form.errors.categoria }}
+        </p>
+        <p>
+            {{ form.quantidade.label }}<br>
+            {{ form.quantidade(size=20) }}<br>
+            {{ form.errors.quantidade }}
+        </p>
+        <p>
+            {{ form.unidade_medida.label }}<br>
+            {{ form.unidade_medida(size=20) }}<br>
+            {{ form.errors.unidade_medida }}
+        </p>
+        <p>
+            {{ form.data_compra.label }}<br>
+            {{ form.data_compra(size=20) }}<br>
+            {{ form.errors.data_compra }}
+        </p>
+        <p>
+            {{ form.valor_unitario.label }}<br>
+            {{ form.valor_unitario(size=20) }}<br>
+            {{ form.errors.valor_unitario }}
+        </p>
+        <p>
+            {{ form.fornecedor.label }}<br>
+            {{ form.fornecedor(size=20) }}<br>
+            {{ form.errors.fornecedor }}
+        </p>
+        <p>
+            {{ form.data_validade.label }}<br>
+            {{ form.data_validade(size=20) }}<br>
+            {{ form.errors.data_validade }}
+        </p>
+        <p>
+            {{ form.observacoes.label }}<br>
+            {{ form.observacoes(cols=30, rows=5) }}<br>
+            {{ form.errors.observacoes }}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+
+    <h2>Lista de Materiais</h2>
+    <ul class="material-list">
+        {% for material in materiais %}
+        <li class="material-item">
+            {{ material.nome }} - Categoria: {{ material.categoria }} - Quantidade: {{ material.quantidade }} - Unidade de Medida: {{ material.unidade_medida }} - Data da Compra: {{ material.data_compra }} - Valor Unitário: R$ {{ material.valor_unitario | round(2) }} - Fornecedor: {{ material.fornecedor }} - Data de Validade: {{ material.data_validade }} - Observações: {{ material.observacoes }}
+            <div class="material-actions">
+                <form action="{{ url_for('edit_estoque', id=material.id) }}" method="GET" style="display:inline;">
+                    <button type="submit">Editar</button>
+                </form>
+                <form action="{{ url_for('delete_estoque', id=material.id) }}" method="POST" style="display:inline;">
+                    <button type="submit">Remover</button>
+                </form>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

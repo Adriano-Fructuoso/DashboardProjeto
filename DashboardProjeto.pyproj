@@ -38,15 +38,18 @@
     <Folder Include="app\static\css\" />
     <Folder Include="app\static\js\" />
     <Folder Include="app\static\images\" />
+    <Folder Include="app\templates\atendimento\" />
+    <Folder Include="app\templates\estoque\" />
+    <Folder Include="app\templates\procedimento\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="app\templates\atendimentos.html" />
-    <Content Include="app\templates\configurar_procedimentos.html" />
-    <Content Include="app\templates\edit_atendimento.html" />
-    <Content Include="app\templates\edit_material.html" />
-    <Content Include="app\templates\edit_procedimentos.html" />
+    <Content Include="app\templates\atendimento\atendimentos.html" />
+    <Content Include="app\templates\procedimento\configurar_procedimentos.html" />
+    <Content Include="app\templates\atendimento\edit_atendimento.html" />
+    <Content Include="app\templates\estoque\edit_estoque.html" />
+    <Content Include="app\templates\procedimento\edit_procedimentos.html" />
     <Content Include="app\templates\index.html" />
-    <Content Include="app\templates\materiais.html" />
+    <Content Include="app\templates\estoque\estoque.html" />
     <Content Include="requirements.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />

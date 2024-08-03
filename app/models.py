@@ -15,9 +15,15 @@ class Procedimento(db.Model):
     valor = db.Column(db.Float, nullable=False)
     materiais = db.Column(db.String(256))  # Adicionar o campo materiais
 
-class Material(db.Model):
+class Estoque(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(64), nullable=False)
-    valor = db.Column(db.Float, nullable=False)
-    quantidade = db.Column(db.Integer, nullable=False)  # Campo de quantidade adicionado
-    tipo = db.Column(db.String(64), nullable=False)  # Campo de tipo adicionado
+    categoria = db.Column(db.String(64), nullable=False)
+    quantidade = db.Column(db.Integer, nullable=False)
+    unidade_medida = db.Column(db.String(32), nullable=False)
+    data_compra = db.Column(db.String(10), nullable=False)
+    valor_unitario = db.Column(db.Float, nullable=False)
+    fornecedor = db.Column(db.String(64), nullable=False)
+    data_validade = db.Column(db.String(10), nullable=False)
+    observacoes = db.Column(db.Text, nullable=True)
+
