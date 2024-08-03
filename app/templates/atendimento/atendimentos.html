@@ -4,20 +4,32 @@
     <meta charset="UTF-8">
     <title>Atendimentos</title>
     <style>
-        .procedure-list {
-            list-style-type: none;
-            padding: 0;
+        table {
+            width: 100%;
+            border-collapse: collapse;
         }
 
-        .procedure-item {
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
             padding: 10px;
-            border: 1px solid #ddd;
-            margin-bottom: 5px;
+            text-align: left;
+            word-wrap: break-word;
         }
 
         .procedure-actions {
             display: inline-block;
             margin-left: 10px;
+        }
+
+        .date-column {
+            width: 120px;
+        }
+
+        .material-column, .observation-column {
+            word-wrap: break-word;
         }
     </style>
     <script>
@@ -113,20 +125,56 @@
     </form>
 
     <h2>Lista de Atendimentos</h2>
-    <ul class="procedure-list">
-        {% for atendimento in atendimentos %}
-        <li class="procedure-item">
-            {{ atendimento.data_atendimento }} - {{ atendimento.nome_paciente }} - R$ {{ atendimento.valor_total | round(2) }}
-            <div class="procedure-actions">
-                <form action="{{ url_for('edit_atendimento', id=atendimento.id) }}" method="GET" style="display:inline;">
-                    <button type="submit">Editar</button>
-                </form>
-                <form action="{{ url_for('delete_atendimento', id=atendimento.id) }}" method="POST" style="display:inline;">
-                    <button type="submit">Remover</button>
-                </form>
-            </div>
-        </li>
-        {% endfor %}
-    </ul>
+    <table>
+        <thead>
+            <tr>
+                <th class="date-column">Data</th>
+                <th>Nome do Paciente</th>
+                <th>Materiais Utilizados</th>
+                <th>Observações</th>
+                <th>Valor Total</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for atendimento in atendimentos %}
+            <tr>
+                <td>{{ atendimento.data_atendimento }}</td>
+                <td>{{ atendimento.nome_paciente }}</td>
+                <td>{{ atendimento.materiais }}</td>
+                <td>{{ atendimento.observacoes }}</td>
+                <td>R$ {{ atendimento.valor_total | round(2) }}</td>
+                <td>
+                    <div class="procedure-actions">
+                        <form action="{{ url_for('edit_atendimento', id=atendimento.id) }}" method="GET" style="display:inline;">
+                            <button type="submit">Editar</button>
+                        </form>
+                        <form action="{{ url_for('delete_atendimento', id=atendimento.id) }}" method="POST" style="display:inline;">
+                            <button type="submit">Remover</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Somatório Mensal</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Mês</th>
+                <th>Valor Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mes, valor_total in somatorio_mensal.items() %}
+            <tr>
+                <td>{{ mes.split('/')[1] }}/{{ mes.split('/')[0] }}</td>
+                <td>R$ {{ valor_total | round(2) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </body>
 </html>

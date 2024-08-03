@@ -11,9 +11,9 @@ class Atendimento(db.Model):
 
 class Procedimento(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    nome = db.Column(db.String(64), unique=True, nullable=False)
+    nome = db.Column(db.String(100), nullable=False)
     valor = db.Column(db.Float, nullable=False)
-    materiais = db.Column(db.String(256))  # Adicionar o campo materiais
+    materiais = db.Column(db.Integer, db.ForeignKey('estoque.id'), nullable=False)  # Supondo que estoque.id é a chave primária
 
 class Estoque(db.Model):
     id = db.Column(db.Integer, primary_key=True)

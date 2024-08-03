@@ -3,6 +3,8 @@ from . import db
 from .forms import AtendimentoForm, ProcedimentoForm, EstoqueForm
 from .models import Atendimento, Procedimento, Estoque
 from flask import current_app as app
+from collections import defaultdict
+from datetime import datetime
 
 @app.route('/')
 def index():
@@ -24,8 +26,11 @@ def atendimentos():
                 if proc:
                     valor_total += proc.valor
 
+        # Garantir que a data seja salva no formato dd/mm/aaaa
+        data_atendimento = form.data_atendimento.data
+
         atendimento = Atendimento(
-            data_atendimento=form.data_atendimento.data,
+            data_atendimento=data_atendimento,
             nome_paciente=form.nome_paciente.data,
             procedimentos=", ".join(procedimentos),
             valor_total=valor_total,
@@ -37,7 +42,17 @@ def atendimentos():
         flash('Atendimento adicionado com sucesso!')
         return redirect(url_for('atendimentos'))
     atendimentos = Atendimento.query.all()
-    return render_template('atendimento/atendimentos.html', form=form, atendimentos=atendimentos)
+    
+    # Lógica para somatório mensal
+    somatorio_mensal = defaultdict(float)
+    for atendimento in atendimentos:
+        try:
+            mes = datetime.strptime(atendimento.data_atendimento, '%d/%m/%Y').strftime('%m/%Y')
+            somatorio_mensal[mes] += atendimento.valor_total
+        except ValueError:
+            continue
+    
+    return render_template('atendimento/atendimentos.html', form=form, atendimentos=atendimentos, somatorio_mensal=somatorio_mensal)
 
 @app.route('/atendimentos/edit/<int:id>', methods=['GET', 'POST'])
 def edit_atendimento(id):
@@ -93,7 +108,6 @@ def configurar_procedimentos():
         flash('Procedimento adicionado/atualizado com sucesso!')
         return redirect(url_for('configurar_procedimentos'))
     return render_template('procedimento/configurar_procedimentos.html', form=form, procedimentos=procedimentos)
-
 @app.route('/procedimentos/edit/<int:id>', methods=['GET', 'POST'])
 def edit_procedimento(id):
     procedimento = Procedimento.query.get_or_404(id)

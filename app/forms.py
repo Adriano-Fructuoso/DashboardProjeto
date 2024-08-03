@@ -1,7 +1,7 @@
 ﻿from flask_wtf import FlaskForm
 from wtforms import StringField, FloatField, SelectField, TextAreaField, SubmitField, IntegerField, DateField
 from wtforms.validators import DataRequired, NumberRange
-from .models import Procedimento
+from .models import Procedimento, Estoque
 
 class AtendimentoForm(FlaskForm):
     data_atendimento = StringField('Data do Atendimento', validators=[DataRequired()])
@@ -16,11 +16,16 @@ class AtendimentoForm(FlaskForm):
     submit = SubmitField('Salvar')
 
 class ProcedimentoForm(FlaskForm):
-    nome = StringField('Nome do Procedimento', validators=[DataRequired()])
+    nome = StringField('Nome', validators=[DataRequired()])
     valor = FloatField('Valor', validators=[DataRequired()])
-    materiais = StringField('Materiais Utilizados', validators=[DataRequired()])
+    
+    # Puxar os materiais do estoque para a lista suspensa
+    materiais = SelectField('Materiais', choices=[], coerce=int)
     submit = SubmitField('Salvar')
-
+    
+    def __init__(self, *args, **kwargs):
+        super(ProcedimentoForm, self).__init__(*args, **kwargs)
+        self.materiais.choices = [(material.id, material.nome) for material in Estoque.query.all()]
 class EstoqueForm(FlaskForm):
     nome = StringField('Nome do Material', validators=[DataRequired()])
     categoria = StringField('Categoria', validators=[DataRequired()])

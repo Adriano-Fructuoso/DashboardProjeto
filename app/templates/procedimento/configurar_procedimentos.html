@@ -3,6 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <title>Configurar Procedimentos</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            word-wrap: break-word;
+        }
+
+        .procedure-actions {
+            display: inline-block;
+            margin-left: 10px;
+        }
+    </style>
 </head>
 <body>
     <h1>Configurar Procedimentos</h1>
@@ -24,27 +45,41 @@
         </p>
         <p>
             {{ form.materiais.label }}<br>
-            {{ form.materiais(size=20) }}<br>
+            {{ form.materiais() }}<br>
             {{ form.errors.materiais }}
         </p>
         <p>{{ form.submit() }}</p>
     </form>
 
     <h2>Lista de Procedimentos</h2>
-    <ul class="procedure-list">
-        {% for procedimento in procedimentos %}
-        <li class="procedure-item">
-            {{ procedimento.nome }} - R$ {{ procedimento.valor | round(2) }} - Materiais: {{ procedimento.materiais }}
-            <div class="procedure-actions">
-                <form action="{{ url_for('edit_procedimento', id=procedimento.id) }}" method="GET" style="display:inline;">
-                    <button type="submit">Editar</button>
-                </form>
-                <form action="{{ url_for('delete_procedimento', id=procedimento.id) }}" method="POST" style="display:inline;">
-                    <button type="submit">Remover</button>
-                </form>
-            </div>
-        </li>
-        {% endfor %}
-    </ul>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Valor</th>
+                <th>Materiais</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for procedimento in procedimentos %}
+            <tr>
+                <td>{{ procedimento.nome }}</td>
+                <td>R$ {{ procedimento.valor | round(2) }}</td>
+                <td>{{ procedimento.materiais }}</td>
+                <td>
+                    <div class="procedure-actions">
+                        <form action="{{ url_for('edit_procedimento', id=procedimento.id) }}" method="GET" style="display:inline;">
+                            <button type="submit">Editar</button>
+                        </form>
+                        <form action="{{ url_for('delete_procedimento', id=procedimento.id) }}" method="POST" style="display:inline;">
+                            <button type="submit">Remover</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </body>
 </html>

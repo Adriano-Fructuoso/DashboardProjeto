@@ -4,20 +4,32 @@
     <meta charset="UTF-8">
     <title>Estoque</title>
     <style>
-        .material-list {
-            list-style-type: none;
-            padding: 0;
+        table {
+            width: 100%;
+            border-collapse: collapse;
         }
 
-        .material-item {
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
             padding: 10px;
-            border: 1px solid #ddd;
-            margin-bottom: 5px;
+            text-align: left;
+            word-wrap: break-word;
         }
 
         .material-actions {
             display: inline-block;
             margin-left: 10px;
+        }
+
+        .date-column {
+            width: 120px;
+        }
+
+        .material-column, .observation-column {
+            word-wrap: break-word;
         }
     </style>
 </head>
@@ -78,20 +90,46 @@
     </form>
 
     <h2>Lista de Materiais</h2>
-    <ul class="material-list">
-        {% for material in materiais %}
-        <li class="material-item">
-            {{ material.nome }} - Categoria: {{ material.categoria }} - Quantidade: {{ material.quantidade }} - Unidade de Medida: {{ material.unidade_medida }} - Data da Compra: {{ material.data_compra }} - Valor Unitário: R$ {{ material.valor_unitario | round(2) }} - Fornecedor: {{ material.fornecedor }} - Data de Validade: {{ material.data_validade }} - Observações: {{ material.observacoes }}
-            <div class="material-actions">
-                <form action="{{ url_for('edit_estoque', id=material.id) }}" method="GET" style="display:inline;">
-                    <button type="submit">Editar</button>
-                </form>
-                <form action="{{ url_for('delete_estoque', id=material.id) }}" method="POST" style="display:inline;">
-                    <button type="submit">Remover</button>
-                </form>
-            </div>
-        </li>
-        {% endfor %}
-    </ul>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Categoria</th>
+                <th>Quantidade</th>
+                <th>Unidade de Medida</th>
+                <th>Data da Compra</th>
+                <th>Valor Unitário</th>
+                <th>Fornecedor</th>
+                <th>Data de Validade</th>
+                <th>Observações</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for material in materiais %}
+            <tr>
+                <td>{{ material.nome }}</td>
+                <td>{{ material.categoria }}</td>
+                <td>{{ material.quantidade }}</td>
+                <td>{{ material.unidade_medida }}</td>
+                <td>{{ material.data_compra }}</td>
+                <td>R$ {{ material.valor_unitario | round(2) }}</td>
+                <td>{{ material.fornecedor }}</td>
+                <td>{{ material.data_validade }}</td>
+                <td>{{ material.observacoes }}</td>
+                <td>
+                    <div class="material-actions">
+                        <form action="{{ url_for('edit_estoque', id=material.id) }}" method="GET" style="display:inline;">
+                            <button type="submit">Editar</button>
+                        </form>
+                        <form action="{{ url_for('delete_estoque', id=material.id) }}" method="POST" style="display:inline;">
+                            <button type="submit">Remover</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </body>
 </html>
