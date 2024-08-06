@@ -1,0 +1,18 @@
+/* static/css/estoque/edit_estoque.css */
+form p {
+    margin-bottom: 15px;
+}
+
+    form p label {
+        font-weight: bold;
+    }
+
+    form p input, form p select, form p textarea {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+    }
+
+button {
+    margin-right: 10px;
+}

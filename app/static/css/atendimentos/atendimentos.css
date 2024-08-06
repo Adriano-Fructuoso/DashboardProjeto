@@ -1,0 +1,27 @@
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    word-wrap: break-word;
+}
+
+.procedure-actions {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.date-column {
+    width: 120px;
+}
+
+.material-column, .observation-column {
+    word-wrap: break-word;
+}

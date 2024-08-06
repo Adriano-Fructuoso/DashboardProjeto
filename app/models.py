@@ -13,7 +13,7 @@ class Procedimento(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(100), nullable=False)
     valor = db.Column(db.Float, nullable=False)
-    materiais = db.Column(db.Integer, db.ForeignKey('estoque.id'), nullable=False)  # Supondo que estoque.id é a chave primária
+    materiais = db.Column(db.Integer, db.ForeignKey('estoque.id'), nullable=False)  # Supondo que estoque.id ï¿½ a chave primï¿½ria
 
 class Estoque(db.Model):
     id = db.Column(db.Integer, primary_key=True)

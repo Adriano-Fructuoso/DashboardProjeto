@@ -43,7 +43,7 @@ def atendimentos():
         return redirect(url_for('atendimentos'))
     atendimentos = Atendimento.query.all()
     
-    # Lógica para somatório mensal
+    # Lï¿½gica para somatï¿½rio mensal
     somatorio_mensal = defaultdict(float)
     for atendimento in atendimentos:
         try:

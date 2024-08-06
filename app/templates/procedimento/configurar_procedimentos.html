@@ -3,27 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Configurar Procedimentos</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        table, th, td {
-            border: 1px solid black;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: left;
-            word-wrap: break-word;
-        }
-
-        .procedure-actions {
-            display: inline-block;
-            margin-left: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/procedimentos/configurar_procedimentos.css') }}">
+    <script defer src="{{ url_for('static', filename='js/procedimentos/configurar_procedimentos.js') }}"></script>
 </head>
 <body>
     <h1>Configurar Procedimentos</h1>
