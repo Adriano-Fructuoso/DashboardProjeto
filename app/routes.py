@@ -165,7 +165,6 @@ def edit_estoque(id):
         material.valor_unitario = form.valor_unitario.data
         material.fornecedor = form.fornecedor.data
         material.data_validade = form.data_validade.data
-        material.nivel_min_estoque = form.nivel_min_estoque.data
         material.observacoes = form.observacoes.data
         db.session.commit()
         flash('Material atualizado com sucesso!')

@@ -26,6 +26,7 @@ class ProcedimentoForm(FlaskForm):
     def __init__(self, *args, **kwargs):
         super(ProcedimentoForm, self).__init__(*args, **kwargs)
         self.materiais.choices = [(material.id, material.nome) for material in Estoque.query.all()]
+
 class EstoqueForm(FlaskForm):
     nome = StringField('Nome do Material', validators=[DataRequired()])
     categoria = StringField('Categoria', validators=[DataRequired()])
