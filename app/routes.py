@@ -5,6 +5,7 @@ from .models import Atendimento, Procedimento, Estoque
 from flask import current_app as app
 from collections import defaultdict
 from datetime import datetime
+import json
 
 @app.route('/')
 def index():
@@ -13,48 +14,95 @@ def index():
 @app.route('/atendimentos', methods=['GET', 'POST'])
 def atendimentos():
     form = AtendimentoForm()
+    materiais = Estoque.query.all()
+    procedimentos = Procedimento.query.all()
+
     if form.validate_on_submit():
-        procedimentos = []
-        valor_total = 0.0
-        procedure_count = int(request.form.get('procedureCount', 1))
-
-        for i in range(1, procedure_count + 1):
-            proc_nome = request.form.get(f'procedimento{i}')
-            if proc_nome:
-                procedimentos.append(proc_nome)
-                proc = Procedimento.query.filter_by(nome=proc_nome).first()
-                if proc:
-                    valor_total += proc.valor
-
-        # Garantir que a data seja salva no formato dd/mm/aaaa
-        data_atendimento = form.data_atendimento.data
-
-        atendimento = Atendimento(
-            data_atendimento=data_atendimento,
-            nome_paciente=form.nome_paciente.data,
-            procedimentos=", ".join(procedimentos),
-            valor_total=valor_total,
-            materiais=form.materiais.data,
-            observacoes=form.observacoes.data
-        )
-        db.session.add(atendimento)
-        db.session.commit()
-        flash('Atendimento adicionado com sucesso!')
-        return redirect(url_for('atendimentos'))
-    atendimentos = Atendimento.query.all()
-    
-    # L�gica para somat�rio mensal
-    somatorio_mensal = defaultdict(float)
-    for atendimento in atendimentos:
         try:
-            mes = datetime.strptime(atendimento.data_atendimento, '%d/%m/%Y').strftime('%m/%Y')
-            somatorio_mensal[mes] += atendimento.valor_total
-        except ValueError:
-            continue
-    
-    return render_template('atendimento/atendimentos.html', form=form, atendimentos=atendimentos, somatorio_mensal=somatorio_mensal)
+            procedimentos_list = []
+            valor_total = 0.0
+            procedure_count = int(request.form.get('procedureCount', 1))
 
-@app.route('/atendimentos/edit/<int:id>', methods=['GET', 'POST'])
+            print("Procedures count:", procedure_count)  # Debugging line
+
+            for i in range(1, procedure_count + 1):
+                proc_nome = request.form.get(f'procedimento{i}')
+                print(f"Procedimento {i}:", proc_nome)  # Debugging line
+                if proc_nome:
+                    procedimentos_list.append(proc_nome)
+                    proc = Procedimento.query.filter_by(nome=proc_nome).first()
+                    if proc:
+                        valor_total += proc.valor
+
+            materiais_utilizados = []
+            material_count = int(request.form.get('materialCount', 1))
+
+            print("Materials count:", material_count)  # Debugging line
+
+            for i in range(1, material_count + 1):
+                mat_nome = request.form.get(f'material{i}')
+                print(f"Material {i}:", mat_nome)  # Debugging line
+                if mat_nome:
+                    materiais_utilizados.append(mat_nome)
+
+            print("Form Data:", form.data_atendimento.data, form.nome_paciente.data, procedimentos_list, valor_total, materiais_utilizados, form.observacoes.data)  # Debugging line
+
+            atendimento = Atendimento(
+                data_atendimento=form.data_atendimento.data.strftime('%d/%m/%Y'),
+                nome_paciente=form.nome_paciente.data,
+                procedimentos=", ".join(procedimentos_list),
+                valor_total=valor_total,
+                materiais=", ".join(materiais_utilizados),
+                observacoes=form.observacoes.data
+            )
+            db.session.add(atendimento)
+            db.session.commit()
+            flash('Atendimento adicionado com sucesso!')
+            return redirect(url_for('atendimentos'))
+        except Exception as e:
+            print("Error occurred:", e)  # Debugging line
+            flash('Erro ao adicionar atendimento!')
+            db.session.rollback()
+    else:
+        print("Form validation failed", form.errors)  # Debugging line
+
+    atendimentos_query = Atendimento.query
+    filter_data = request.args.get('filter_data')
+    filter_paciente = request.args.get('filter_paciente')
+    filter_procedimento = request.args.get('filter_procedimento')
+
+    if filter_data:
+        atendimentos_query = atendimentos_query.filter(Atendimento.data_atendimento.like(f"%{filter_data}%"))
+    if filter_paciente:
+        atendimentos_query = atendimentos_query.filter(Atendimento.nome_paciente.like(f"%{filter_paciente}%"))
+    if filter_procedimento:
+        atendimentos_query = atendimentos_query.filter(Atendimento.procedimentos.like(f"%{filter_procedimento}%"))
+
+    atendimentos = atendimentos_query.all()
+
+    somatorio_mensal = {}
+    for atendimento in atendimentos:
+        data = datetime.strptime(atendimento.data_atendimento, '%d/%m/%Y')
+        mes_ano = data.strftime('%m/%Y')
+        if mes_ano in somatorio_mensal:
+            somatorio_mensal[mes_ano] += atendimento.valor_total
+        else:
+            somatorio_mensal[mes_ano] = atendimento.valor_total
+
+    pacientes = Atendimento.query.with_entities(Atendimento.nome_paciente).distinct().all()
+
+    procedimentos_json = json.dumps([proc.nome for proc in procedimentos])
+    materiais_json = json.dumps([mat.nome for mat in materiais])
+
+    return render_template('atendimento/atendimentos.html', 
+                           form=form, 
+                           atendimentos=atendimentos, 
+                           somatorio_mensal=somatorio_mensal, 
+                           pacientes=pacientes,
+                           procedimentos_json=procedimentos_json,
+                           materiais_json=materiais_json)
+
+
 def edit_atendimento(id):
     atendimento = Atendimento.query.get_or_404(id)
     form = AtendimentoForm(obj=atendimento)

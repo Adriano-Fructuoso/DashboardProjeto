@@ -33,6 +33,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="app\" />
+    <Folder Include="app\static\css\atendimentos\" />
+    <Folder Include="app\static\css\estoque\" />
+    <Folder Include="app\static\css\procedimento\" />
+    <Folder Include="app\static\js\atendimentos\" />
+    <Folder Include="app\static\js\estoque\" />
+    <Folder Include="app\static\js\procedimento\" />
     <Folder Include="app\templates\" />
     <Folder Include="app\static\" />
     <Folder Include="app\static\css\" />
@@ -43,6 +49,18 @@
     <Folder Include="app\templates\procedimento\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app\static\css\atendimentos\atendimentos.css" />
+    <Content Include="app\static\css\atendimentos\edit_atendimento.css" />
+    <Content Include="app\static\css\estoque\edit_estoque.css" />
+    <Content Include="app\static\css\estoque\estoque.css" />
+    <Content Include="app\static\css\procedimento\configurar_procedimento.css" />
+    <Content Include="app\static\css\procedimento\edit_procedimento.css" />
+    <Content Include="app\static\js\atendimentos\atendimentos.js" />
+    <Content Include="app\static\js\atendimentos\edit_atendimento.js" />
+    <Content Include="app\static\js\estoque\edit_estoque.js" />
+    <Content Include="app\static\js\estoque\estoque.js" />
+    <Content Include="app\static\js\procedimento\configurar_procedimento.js" />
+    <Content Include="app\static\js\procedimento\edit_procedimento.js" />
     <Content Include="app\templates\atendimento\atendimentos.html" />
     <Content Include="app\templates\procedimento\configurar_procedimentos.html" />
     <Content Include="app\templates\atendimento\edit_atendimento.html" />

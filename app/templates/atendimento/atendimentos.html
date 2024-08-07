@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <title>Atendimentos</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/atendimentos/atendimentos.css') }}">
+    <link rel="stylesheet" type="text/css" href="/static/css/atendimentos/atendimentos.css">
+    <script src="/static/js/atendimentos/atendimentos.js" defer></script>
 </head>
 <body>
     <h1>Atendimentos</h1>
@@ -12,11 +13,11 @@
     <a href="{{ url_for('configurar_procedimentos') }}">Configurar Procedimentos</a>
     <a href="{{ url_for('estoque') }}">Estoque</a>
 
-    <form method="POST">
+    <form method="POST" action="{{ url_for('atendimentos') }}">
         {{ form.hidden_tag() }}
         <p>
             {{ form.data_atendimento.label }}<br>
-            {{ form.data_atendimento(size=20, placeholder='dd/mm/aaaa', oninput='formatDate(this)') }}<br>
+            {{ form.data_atendimento(size=20, placeholder='dd/mm/aaaa', class='format-date') }}<br>
             {{ form.errors.data_atendimento }}
         </p>
         <p>
@@ -32,13 +33,27 @@
             </p>
         </div>
         <input type="hidden" name="procedureCount" id="procedureCount" value="1">
-        <button type="button" onclick="addProcedure()">Adicionar</button>
-        <button type="button" onclick="removeProcedure()">Remover</button>
-        <p>
-            {{ form.materiais.label }}<br>
-            {{ form.materiais(size=20) }}<br>
-            {{ form.errors.materiais }}
-        </p>
+        <button type="button" id="addProcedureBtn">Adicionar Procedimento</button>
+        <button type="button" id="removeProcedureBtn">Remover Procedimento</button>
+
+        <div id="materials">
+            <p>
+                <label for="material1">Material 1</label><br>
+                <select name="material1" id="material1">
+                    {% for mat in materiais %}
+                    <option value="{{ mat.nome }}">{{ mat.nome }}</option>
+                    {% endfor %}
+                </select>
+            </p>
+            <p>
+                <label for="quantidade1">Quantidade 1</label><br>
+                <input type="number" name="quantidade1" id="quantidade1" value="1">
+            </p>
+        </div>
+        <input type="hidden" name="materialCount" id="materialCount" value="1">
+        <button type="button" id="addMaterialBtn">Adicionar Material</button>
+        <button type="button" id="removeMaterialBtn">Remover Material</button>
+
         <p>
             {{ form.observacoes.label }}<br>
             {{ form.observacoes(cols=30, rows=5) }}<br>
@@ -51,11 +66,35 @@
     </form>
 
     <h2>Lista de Atendimentos</h2>
+    <form method="GET" action="{{ url_for('atendimentos') }}">
+        <label for="filter_data">Data:</label>
+        <input type="text" name="filter_data" id="filter_data" placeholder="dd/mm/aaaa" class="format-filter-date" value="{{ request.args.get('filter_data', '') }}">
+
+        <label for="filter_paciente">Paciente:</label>
+        <select id="filter_paciente" name="filter_paciente">
+            <option value="">Todos os Pacientes</option>
+            {% for paciente in pacientes %}
+            <option value="{{ paciente.nome_paciente }}">{{ paciente.nome_paciente }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="filter_procedimento">Procedimento:</label>
+        <select name="filter_procedimento" id="filter_procedimento">
+            <option value="">Todos os Procedimentos</option>
+            {% for proc in form.procedimento1.choices %}
+            <option value="{{ proc[0] }}">{{ proc[1] }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Filtrar</button>
+    </form>
+
     <table>
         <thead>
             <tr>
                 <th class="date-column">Data</th>
                 <th>Nome do Paciente</th>
+                <th>Procedimentos</th>
                 <th>Materiais Utilizados</th>
                 <th>Observações</th>
                 <th>Valor Total</th>
@@ -67,6 +106,7 @@
             <tr>
                 <td>{{ atendimento.data_atendimento }}</td>
                 <td>{{ atendimento.nome_paciente }}</td>
+                <td>{{ atendimento.procedimentos }}</td>
                 <td>{{ atendimento.materiais }}</td>
                 <td>{{ atendimento.observacoes }}</td>
                 <td>R$ {{ atendimento.valor_total | round(2) }}</td>
@@ -102,6 +142,10 @@
             {% endfor %}
         </tbody>
     </table>
-    <script src="{{ url_for('static', filename='js/atendimentos/atendimentos.js') }}"></script>
+
+    <script nonce="{{ g.nonce }}">
+        window.procedimentos = {{ procedimentos_json | safe }};
+        window.materiais = {{ materiais_json | safe }};
+    </script>
 </body>
 </html>

@@ -1,13 +1,13 @@
-from app import db
+from . import db
 
 class Atendimento(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    data_atendimento = db.Column(db.String(10))
-    nome_paciente = db.Column(db.String(64))
-    procedimentos = db.Column(db.String(256))  # Armazena uma lista de procedimentos
-    valor_total = db.Column(db.Float)
-    materiais = db.Column(db.String(256))
-    observacoes = db.Column(db.String(256))
+    data_atendimento = db.Column(db.String(10), nullable=False)
+    nome_paciente = db.Column(db.String(100), nullable=False)
+    procedimentos = db.Column(db.Text, nullable=False)
+    valor_total = db.Column(db.Float, nullable=False)
+    materiais = db.Column(db.Text, nullable=True)
+    observacoes = db.Column(db.Text, nullable=True)
 
 class Procedimento(db.Model):
     id = db.Column(db.Integer, primary_key=True)
